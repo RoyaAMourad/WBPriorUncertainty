@@ -35,7 +35,7 @@ To run the javascript codes, you will need to have an account in GEE (https://ea
 * to run the eeSEBAL tool:
   
 1. Open the GEE code editor in your web browser
-2. Create new script files in the GEE code editor for each of the required modules:
+2. Create new script files in the GEE code editor for each of the following required modules, and save them in one repository:
    * `masks.js`
    * `input_sat.js`
    * `era5_coll.js`
