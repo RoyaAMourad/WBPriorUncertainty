@@ -53,7 +53,7 @@ To run the javascript codes, you will need to have an account in GEE (https://ea
    var ecmwf = require('users/your_username/repository_path:era5_coll');
    ```
    * You can export the final ET maps by setting the `export_raster` variable to `true` 
-   * Run the script
+   * Run the script by clicking the "Run" button in the GEE code editor
    
 
 
