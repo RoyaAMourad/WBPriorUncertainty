@@ -113,7 +113,7 @@ exports.Calc_Ra_Mountain = function (image) {
   var Min_cos_zn = ee.Number(0.1); // Min value for cos zenith angle
   var Max_cos_zn = ee.Number(1); // Max value for cos zenith angle
   
-  //retrciting Angle slope between 0.1 and 1
+  //restrict Angle slope between 0.1 and 1
   
   // cos_zn = cos_zn.where(cos_zn.lt(Min_cos_zn),0.1);
   // cos_zn = cos_zn.where(cos_zn.gt(Max_cos_zn),1);
@@ -913,7 +913,7 @@ exports.fexp_sensible_heat_flux = function(image) {
 //------------------------------------------------------------------------------//  
 
 exports.Calc_Ref_ET= function(image){
-  /*Function to calculate the reference evapotransporation*/ 
+  /*Function to calculate the reference evapotranspiration*/ 
   
   var Pair = image.select('Press_inst').divide(1000).rename('Pair');
   var Psychro_c = Pair.multiply(ee.Number(0.665E-3));
