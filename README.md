@@ -1,3 +1,5 @@
+   [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.11148992.svg)](https://doi.org/10.5281/zenodo.11148992)
+
 This repository provides tools for water balance data collection, processing, and uncertainty analysis. 
 # Structure of the repository 
 ## Water Balance (WB) data collection and processing
@@ -55,7 +57,7 @@ To run the javascript codes, you will need to have an account in GEE (https://ea
    * You can export the final ET maps by setting the `export_raster` variable to `true` 
    * Run the script by clicking the "Run" button in the GEE code editor
 
-   [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.11148992.svg)](https://doi.org/10.5281/zenodo.11148992)
+
 
 
   
