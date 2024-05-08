@@ -54,7 +54,8 @@ To run the javascript codes, you will need to have an account in GEE (https://ea
    ```
    * You can export the final ET maps by setting the `export_raster` variable to `true` 
    * Run the script by clicking the "Run" button in the GEE code editor
-   
+
+   [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.11148992.svg)](https://doi.org/10.5281/zenodo.11148992)
 
 
   
