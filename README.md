@@ -46,7 +46,11 @@ To run the javascript codes, you will need to have an account in GEE (https://ea
 3. In `masks.js` , `compute_script.js` and `rs_func_root.js` do the following:
    * Update the `coordinates` variable in the script with your study area polygon coordinates
    * Modify the `startdate` and `enddate` variables to define your study period
-4. In `rs_func_root.js` do the following:
+4. In `input_sat.js`:
+   * Change the user in the following lines to your own GEE repository path:
+   ```javascript
+   var mask = require('users/your_username/repository_path:masks');
+5. In `rs_func_root.js` do the following:
    * Change the user in the following lines to your own GEE repository path:
    ```javascript
    var input_sat = require('users/your_username/repository_path:input_sat');
