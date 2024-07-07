@@ -20,7 +20,7 @@ var scale = 500;
 //--------------- DATA IMPORT ------------------//
 
 // Import MODIS ET
-var modis = ee.ImageCollection("MODIS/006/MOD16A2")
+var modis = ee.ImageCollection("MODIS/006/MOD16A2") //ee.ImageCollection("MODIS/061/MOD16A2GF")
   .filter(ee.Filter.calendarRange(syear, eyear, 'year'))
   .select(['ET']); // PET
 
