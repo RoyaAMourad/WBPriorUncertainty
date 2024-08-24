@@ -178,10 +178,7 @@ exports.prepareLandsat5 = function(Landsat1, Landsat2, area, startdate, enddate,
     var SWIR2 = image.select('SWIR2').multiply(2.75e-05).add(-0.2);
     var LST_Day = image.select('Thermal').multiply(0.00341802).add(149);
     
-    // var waterOcc = ee.Image("JRC/GSW1_0/GlobalSurfaceWater").select('occurrence'),
-    // jrc_data0 = ee.Image("JRC/GSW1_0/Metadata").select('total_obs').lte(0),
-    // waterOccFilled = waterOcc.unmask(0).max(jrc_data0),
-    // waterMask = waterOccFilled.lt(50);
+    
     
     return image.addBands([Blue,Green,Red,NIR,SWIR1,SWIR2,LST_Day],
     ['Blue','Green','Red','NIR','SWIR1','SWIR2','Thermal'],true).updateMask(waterMask)});
