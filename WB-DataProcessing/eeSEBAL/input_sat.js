@@ -19,20 +19,20 @@ var mask=require('users/royaamourad/SEBAL-GEE:masks');
 
 
 */
-
-exports.prepareLandsat8 = function(Landsat1, Landsat2, area, startdate, enddate, offset_GTM){
+//Landsat1,
+exports.prepareLandsat8 = function( Landsat2, area, startdate, enddate, offset_GTM){
   
-  Landsat1 = ee.ImageCollection(Landsat1.filterBounds(area)
+  var Landsat = ee.ImageCollection(Landsat2.filterBounds(area)
   .filterDate(startdate, enddate)
   .filter(ee.Filter.lt('CLOUD_COVER_LAND', 70))
   .filter(ee.Filter.lt('CLOUD_COVER', 60)));
 
-  Landsat2 = ee.ImageCollection(Landsat2.filterBounds(area)
-  .filterDate(startdate, enddate)
-  .filter(ee.Filter.lt('CLOUD_COVER_LAND', 20))
-  .filter(ee.Filter.lt('CLOUD_COVER', 60)));
+  // Landsat2 = ee.ImageCollection(Landsat2.filterBounds(area)
+  // .filterDate(startdate, enddate)
+  // .filter(ee.Filter.lt('CLOUD_COVER_LAND', 20))
+  // .filter(ee.Filter.lt('CLOUD_COVER', 60)));
   
-  var Landsat = Landsat1.merge(Landsat2);
+  // var Landsat = Landsat1.merge(Landsat2);
   
   Landsat =  addingOffset(Landsat,offset_GTM);
 
@@ -57,13 +57,13 @@ exports.prepareLandsat8 = function(Landsat1, Landsat2, area, startdate, enddate,
     var SWIR1 = image.select('SWIR1').multiply(2.75e-05).add(-0.2);
     var SWIR2 = image.select('SWIR2').multiply(2.75e-05).add(-0.2);
     var LST_Day = image.select('Thermal').multiply(0.00341802).add(149);
-    // var waterOcc = ee.Image("JRC/GSW1_0/GlobalSurfaceWater").select('occurrence'),
-    // jrc_data0 = ee.Image("JRC/GSW1_0/Metadata").select('total_obs').lte(0),
-    // waterOccFilled = waterOcc.unmask(0).max(jrc_data0),
-    // waterMask = waterOccFilled.lt(50);
+   // var waterOcc = ee.Image("JRC/GSW1_0/GlobalSurfaceWater").select('occurrence'),
+    //jrc_data0 = ee.Image("JRC/GSW1_0/Metadata").select('total_obs').lte(0),
+    //waterOccFilled = waterOcc.unmask(0).max(jrc_data0),
+    //waterMask = waterOccFilled.lt(50);
     
     return image.addBands([Ultra_Blue,Blue,Green,Red,NIR,SWIR1,SWIR2,LST_Day],
-    ['Ultra_Blue','Blue','Green','Red','NIR','SWIR1','SWIR2','Thermal'],true).updateMask(waterMask)});
+    ['Ultra_Blue','Blue','Green','Red','NIR','SWIR1','SWIR2','Thermal'],true)});//.updateMask(waterMask)
     
     Landsat = Landsat
     .map(add_date)
@@ -76,23 +76,26 @@ exports.prepareLandsat8 = function(Landsat1, Landsat2, area, startdate, enddate,
 
   return Landsat;
 };
+//Landsat2,
 
-
-exports.prepareLandsat7 = function(Landsat1, Landsat2, area, startdate, enddate, offset_GTM){
+exports.prepareLandsat7 = function(Landsat1,area, startdate, enddate, offset_GTM){
 
   Landsat1 = ee.ImageCollection(Landsat1.filterBounds(area)
   .filterDate(startdate, enddate)
   .filter(ee.Filter.lt('CLOUD_COVER_LAND', 70))
   .filter(ee.Filter.lt('CLOUD_COVER', 60)));
-
-  Landsat2 = ee.ImageCollection(Landsat2.filterBounds(area)
-  .filterDate(startdate, enddate)
-  .filter(ee.Filter.lt('CLOUD_COVER_LAND', 20))
-  .filter(ee.Filter.lt('CLOUD_COVER', 60)));
   
-  var Landsat = Landsat1.merge(Landsat2);
+  // print('Landsat1', Landsat1);
 
-  Landsat =  addingOffset(Landsat,offset_GTM);
+  // Landsat2 = ee.ImageCollection(Landsat2.filterBounds(area)
+  // .filterDate(startdate, enddate)
+  // .filter(ee.Filter.lt('CLOUD_COVER_LAND', 20))
+  // .filter(ee.Filter.lt('CLOUD_COVER', 60)));
+  
+  // var Landsat = Landsat1.merge(Landsat2);
+
+  //Landsat =  addingOffset(Landsat,offset_GTM);
+  var Landsat =  addingOffset(Landsat1,offset_GTM);
   
   Landsat = Landsat.map(function(image){
     var sun_elev =ee.Number(image.get('SUN_ELEVATION'));
@@ -100,11 +103,33 @@ exports.prepareLandsat7 = function(Landsat1, Landsat2, area, startdate, enddate,
     return image.set('SOLAR_ZENITH_ANGLE',solar_zenith);
   });
   
+  // print('0', Landsat);
+  // Map.addLayer(Landsat, {}, 'Test0')
+  
+    // Apply a focal mean to fill in any missing pixels in the images
+    // Landsat = Landsat.map(function(img) {
+    // var focalMean = img.focal_mean(1, 'square', 'pixels', 16);
+    
+    // var filledImage = focalMean.blend(img);
+    // filledImage = filledImage.toInt();
+    // return filledImage.copyProperties(img).copyProperties(img, ['system:time_start']);
+    // });
+  
+  
+      function fill_l7(image){
+      var focalmean = image.focal_mean(1, 'square', 'pixels', 16);
+      var filled = image.blend(focalmean).toInt();
+      
+      return filled.copyProperties(image).copyProperties(image, ['system:time_start']);
+    }
+
+  Landsat = Landsat.map(fill_l7);
+  
   Landsat = Landsat.map(function(image){
       return image.select(['SR_B1', 'SR_B2', 'SR_B3', 'SR_B4', 'SR_B5', 'SR_B7', 'ST_B6','QA_PIXEL'],
     ['Blue', 'Green', 'Red', 'NIR', 'SWIR1', 'SWIR2', 'Thermal','pixel_qa']).toInt();
     });
-    
+    // print(Landsat)
     Landsat = Landsat.map(function(image){
     // multiply bands by scale and add offset
     var Blue = image.select('Blue').multiply(2.75e-05).add(-0.2);
@@ -115,42 +140,43 @@ exports.prepareLandsat7 = function(Landsat1, Landsat2, area, startdate, enddate,
     var SWIR2 = image.select('SWIR2').multiply(2.75e-05).add(-0.2);
     var LST_Day = image.select('Thermal').multiply(0.00341802).add(149);
     
-    
+    //var waterOcc = ee.Image("JRC/GSW1_0/GlobalSurfaceWater").select('occurrence'),
+    //jrc_data0 = ee.Image("JRC/GSW1_0/Metadata").select('total_obs').lte(0),
+   // waterOccFilled = waterOcc.unmask(0).max(jrc_data0),
+    //waterMask = waterOccFilled.lt(50);
     
     return image.addBands([Blue,Green,Red,NIR,SWIR1,SWIR2,LST_Day],
-    ['Blue','Green','Red','NIR','SWIR1','SWIR2','Thermal'],true).updateMask(waterMask)});
+    ['Blue','Green','Red','NIR','SWIR1','SWIR2','Thermal'],true)});
     
-    // Apply a focal mean to fill in any missing pixels in the images
-    Landsat = Landsat.map(function(img) {
-    var focalMean = img.focal_mean(1, 'square', 'pixels', 16);
-    var filledImage = focalMean.blend(img);
-    filledImage = filledImage.toInt();
-    return filledImage.copyProperties(img).copyProperties(img, ['system:time_start']);
-    });
-  
-  
+    //.updateMask(waterMask)});
+    
+    // print('1', Landsat);
+    // Map.addLayer(Landsat, {}, 'test1');
+    
+
+
   Landsat = Landsat.map(add_date).map(mask.cloud_mask);
-  
+  // Map.addLayer(Landsat, {}, 'test2')
   Landsat =ee.ImageCollection(ee.Algorithms.If(Landsat.size().eq(0),Landsat,mosaicDaily(Landsat, area)));
 
 
   return Landsat;
 };
 
-
-exports.prepareLandsat5 = function(Landsat1, Landsat2, area, startdate, enddate, offset_GTM){
+// Landsat2,
+exports.prepareLandsat5 = function(Landsat1, area, startdate, enddate, offset_GTM){
   
-  Landsat1 = ee.ImageCollection(Landsat1.filterBounds(area)
+  var Landsat = ee.ImageCollection(Landsat1.filterBounds(area)
   .filterDate(startdate, enddate)
   .filter(ee.Filter.lt('CLOUD_COVER_LAND', 70))
   .filter(ee.Filter.lt('CLOUD_COVER', 60)));
 
-  Landsat2 = ee.ImageCollection(Landsat2.filterBounds(area)
-  .filterDate(startdate, enddate)
-  .filter(ee.Filter.lt('CLOUD_COVER_LAND', 20))
-  .filter(ee.Filter.lt('CLOUD_COVER', 60)));
+  // Landsat2 = ee.ImageCollection(Landsat2.filterBounds(area)
+  // .filterDate(startdate, enddate)
+  // .filter(ee.Filter.lt('CLOUD_COVER_LAND', 20))
+  // .filter(ee.Filter.lt('CLOUD_COVER', 60)));
   
-  var Landsat = Landsat1.merge(Landsat2);
+  //var Landsat = Landsat1.merge(Landsat2);
   
   Landsat =  addingOffset(Landsat,offset_GTM);
   
@@ -175,10 +201,13 @@ exports.prepareLandsat5 = function(Landsat1, Landsat2, area, startdate, enddate,
     var SWIR2 = image.select('SWIR2').multiply(2.75e-05).add(-0.2);
     var LST_Day = image.select('Thermal').multiply(0.00341802).add(149);
     
-    
+    //var waterOcc = ee.Image("JRC/GSW1_0/GlobalSurfaceWater").select('occurrence'),
+    //jrc_data0 = ee.Image("JRC/GSW1_0/Metadata").select('total_obs').lte(0),
+    //waterOccFilled = waterOcc.unmask(0).max(jrc_data0),
+    //waterMask = waterOccFilled.lt(50);
     
     return image.addBands([Blue,Green,Red,NIR,SWIR1,SWIR2,LST_Day],
-    ['Blue','Green','Red','NIR','SWIR1','SWIR2','Thermal'],true).updateMask(waterMask)});
+    ['Blue','Green','Red','NIR','SWIR1','SWIR2','Thermal'],true)}); //.updateMask(waterMask)
   
   Landsat = Landsat.map(add_date).map(mask.cloud_mask);
   
