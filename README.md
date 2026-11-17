@@ -1,5 +1,4 @@
    [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.11148992.svg)](https://doi.org/10.5281/zenodo.11148992)
-![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white) ![Jupyter](https://img.shields.io/badge/Jupyter-F37626?logo=jupyter&logoColor=white) ![Google Earth Engine](https://img.shields.io/badge/Google%20Earth%20Engine-4285F4?logo=google&logoColor=white) ![NumPy](https://img.shields.io/badge/NumPy-013243?logo=numpy&logoColor=white) ![pandas](https://img.shields.io/badge/pandas-150458?logo=pandas&logoColor=white) ![rasterio](https://img.shields.io/badge/rasterio-3A3A3A) ![GDAL](https://img.shields.io/badge/GDAL-5CAE58?logo=osgeo&logoColor=white) ![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?logo=scikitlearn&logoColor=white) ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
 This repository provides tools for water balance data collection, processing, and uncertainty analysis. 
 # Structure of the repository 
@@ -62,8 +61,4 @@ To run the javascript codes, you will need to have an account in GEE (https://ea
    * You can export the final ET maps by setting the `export_raster` variable to `true` 
    * Run the script by clicking the "Run" button in the GEE code editor
 
-
-
-
-  
-
+![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white) ![Jupyter](https://img.shields.io/badge/Jupyter-F37626?logo=jupyter&logoColor=white) ![Google Earth Engine](https://img.shields.io/badge/Google%20Earth%20Engine-4285F4?logo=google&logoColor=white) ![NumPy](https://img.shields.io/badge/NumPy-013243?logo=numpy&logoColor=white) ![pandas](https://img.shields.io/badge/pandas-150458?logo=pandas&logoColor=white) ![rasterio](https://img.shields.io/badge/rasterio-3A3A3A) ![GDAL](https://img.shields.io/badge/GDAL-5CAE58?logo=osgeo&logoColor=white) ![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?logo=scikitlearn&logoColor=white) ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
